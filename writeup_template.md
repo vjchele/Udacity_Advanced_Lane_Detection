@@ -18,14 +18,14 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./output_images/camera_calibration_original_Image.png "Original"
-[image2]: ./output_images/camera_calibration_undistorted_Image.png "undistorted"
-[image3]: ./output_images/Original_Image.png "Original Straight Line Image"
-[image4]: ./output_images/Undistorted_Image.png "Undistorted_Image"
-[image5]: ./output_images/combined_binary.png "Binary lane detected image"
-[image6]: ./output_images/output_binary_warped_Image.png "binary warped image"
-[image7]: ./output_images/histogram.png "Histogram image"
-[image8]: ./output_images/final_result.PNG "Final Result image"
+[image1]: ./camera_calibration_original_Image.png "Original"
+[image2]: ./camera_calibration_undistorted_Image.png "undistorted"
+[image3]: ./Original_Image.png "Original Straight Line Image"
+[image4]: ./Undistorted_Image.png "Undistorted_Image"
+[image5]: ./combined_binary.png "Binary lane detected image"
+[image6]: ./output_binary_warped_Image.png "binary warped image"
+[image7]: ./histogram.png "Histogram image"
+[image8]: ./final_result.PNG "Final Result image"
 [video1]: ./video_output.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
@@ -47,17 +47,17 @@ I start by preparing "object points", which will be the (x, y, z) coordinates of
 
 I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: 
 The calibrated values mtx and dist are pickled into a file 'camera_calibration_result.p' for use later.
-![alt text][image1] ![alt text][image2]
+![Original][image1] ![Undistorted][image2]
 
 ###Pipeline (single images)
 
 ####1. Provide an example of a distortion-corrected image.
 To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one. Here even though distortion correction has been applied it is not very obvious. 
-![alt text][image3] ![alt text][image4]
+![Original_Straight_Line][image3] ![Undistorted_Straight_line][image4]
 ####2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 I used a combination of color and gradient thresholds to generate a binary image (thresholding steps done in notebook cell In 185). I have applied sobel operator on R and S channels. I figured out that using these channels helped me identify the lanes precisely.  Here's an example of my output for this step. Binary activation occurs anywhere two of the three (sobelx, or R threshold or S channel threshold)
 
-![alt text][image5]
+![Binary Lane Detected][image5]
 
 ####3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
@@ -67,7 +67,7 @@ The code for my perspective transform includes a function called `birds_eye()`, 
 # Source points - defined area of lane line edges
     src = np.float32([[690,450],[1110,img_size[1]],[175,img_size[1]],[595,450]])
 
-    # 4 destination points to transfer
+    
     offset = 300 # offset for dst points
     dst = np.float32([[img_size[0]-offset, 0],[img_size[0]-offset, img_size[1]],
                       [offset, img_size[1]],[offset, 0]])
@@ -84,7 +84,7 @@ This resulted in the following source and destination points:
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
-![alt text][image6]
+![Binary warped Image][image6]
 
 ####4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
@@ -92,7 +92,7 @@ The code for this is in notebook cell In 188 in the function first_lines. I gene
 
 This histogram follows pretty close to what I expected from the last binary warped image above. Later I used the sliding windows, to calculate the lane-line pixels and fit a second order polynomial to each lane :
 
-![alt text][image7]
+![Histogram][image7]
 
 ####5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
@@ -105,7 +105,7 @@ For the car's position vs. center, I calculated where the lines began at the bot
 
 Code in notebook cell In 189 processes the image and outputs a video.  Here is an example of my result on a test image:
 
-![alt text][image8]
+![Final Result Image][image8]
 
 ---
 
