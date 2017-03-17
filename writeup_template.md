@@ -115,6 +115,8 @@ Code in notebook cell 27 processes the image and outputs a video.  Here is an ex
 
 Here's a [link to my video result](./video_output.mp4)
 
+Here's a link to video on youtube: https://youtu.be/1Oi-gfij4Wc
+
 ---
 
 ###Discussion
