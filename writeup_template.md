@@ -34,7 +34,7 @@ The goals / steps of this project are the following:
 
 ####1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
 
-The code for this step is contained in the code cell In 182 of the IPython notebook Advanced_LaneDetection.ipynb .  
+The code for this step is contained in the code cell 20 of the IPython notebook Advanced_LaneDetection.ipynb .  
 
 I start by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
 
@@ -54,17 +54,17 @@ To demonstrate this step, I will describe how I apply the distortion correction 
 #### Undistoted Straight Line Image
 ![Undistorted_Straight_line][image4]
 ####2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps done in notebook cell In 185). I have applied sobel operator on R and S channels. I figured out that using these channels helped me identify the lanes precisely.  Here's an example of my output for this step. Binary activation occurs anywhere two of the three (sobelx, or R threshold or S channel threshold)
+I used a combination of color and gradient thresholds to generate a binary image (thresholding steps done in notebook cell 24). I have applied sobel operator on R and S channels. Intially, I tried with just absolute sobel operator, but found that using S and R channels are very effective. I figured out that using these channels helped me identify the lanes precisely.  Here's an example of my output for this step. Binary activation occurs anywhere two of the three (sobelx, or R threshold or S channel threshold)
 #### Binary Lane Detected Image
 ![Binary Lane Detected][image5]
 
 ####3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called `birds_eye()`, which appears in notebook cell In 186.  The `birds_eye()` function takes as inputs an image (`img`), as well as mtx (`mtx`) and distortion coefficients (`dst`) points.  I chose the hardcode the source and destination points in the following manner. I have used an offset of 300. I tried with other values but, found 300 to give me the desired output.
+The code for my perspective transform includes a function called `pipeline`, which appears in notebook cell 23.  The `pipeline()` function takes as inputs an image (`img`), as well as mtx (`mtx`) and distortion coefficients (`dst`) points.  I chose the hardcode the source and destination points in the following manner. I have used an offset of 300. I tried with other values but, found 300 to give me the desired output.
 
 ```
 # Source points - defined area of lane line edges
-    src = np.float32([[690,450],[1110,img_size[1]],[175,img_size[1]],[595,450]])
+    src = np.float32([[670,450],[1100,img_size[1]],[175,img_size[1]],[590,450]])
 
     
     offset = 300 # offset for dst points
@@ -76,10 +76,10 @@ This resulted in the following source and destination points:
 
 | Source        | Destination   | 
 |:-------------:|:-------------:| 
-| 690, 450      | 980, 0        | 
-| 1110, 720      | 980, 0      |
+| 670, 450      | 980, 0        | 
+| 1100, 720      | 980, 0      |
 | 175, 720     | 300, 720      |
-| 595, 450      | 300, 0        |
+| 590, 450      | 300, 0        |
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 #### Binary Warped Image
@@ -87,7 +87,7 @@ I verified that my perspective transform was working as expected by drawing the 
 
 ####4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-The code for this is in notebook cell In 188 in the function first_lines. I generated a historgram of bottom half of the image and identified the lanes where the pixels peak.
+Two line objects Left_line and Right_line were created to store left and right lane information (code cell 25). Code in cell 8, draw_lines_using_sliding_window was used to first detect lanes by generating histogram of bottom half of the image and identified the lanes where the pixels peak.
 
 This histogram follows pretty close to what I expected from the last binary warped image above. Later I used the sliding windows, to calculate the lane-line pixels and fit a second order polynomial to each lane :
 #### Histogram Image
@@ -95,14 +95,15 @@ This histogram follows pretty close to what I expected from the last binary warp
 
 ####5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-The function draw_lines() Notebook In 188, is used to calculate the lane curvature. The code pretty much follows the sample code that was given the class. The radius of curvature and position of the car from center are two important parameters that are calculated here.
+The function draw_lines_using_sliding_window() (code cell 26), is used to calculate the lane curvature. The code pretty much follows the sample code that was given the class. The radius of curvature and position of the car from center are two important parameters that are calculated here.
 
 For the lane curvature, I first have to convert the space from pixels to real world dimensions. Then, I calculate the polynomial fit in that space. 
-For the car's position vs. center, I calculated where the lines began at the bottom of the picture (using second_ord_poly() defined at 282-292 with the image's y-dimension size plugged in). This gets printed onto the image as shown below.
+For the car's position vs. center, I calculated where the lines began at the bottom of the picture . The lines of code starting from lines 148 - 172 in cell 26
+
 
 ####6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-Code in notebook cell In 189 processes the image and outputs a video.  Here is an example of my result on a test image:
+Code in notebook cell 27 processes the image and outputs a video.  Here is an example of my result on a test image:
 #### Final Result Image
 ![Final Result Image][image8]
 
